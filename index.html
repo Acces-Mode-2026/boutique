@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boutique de Mode | Tendances & Accessoires Canada</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root { --dark: #1a1a1a; --gold: #c5a059; --cream: #fdfcf9; }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--cream); color: var(--dark); overflow-x: hidden; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+        .navbar { padding: 25px 0; border-bottom: 1px solid rgba(0,0,0,0.05); background: white; }
+        .hero { padding: 120px 0 80px; background: white; clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%); }
+        .badge-expo { background: var(--gold); color: white; padding: 5px 15px; border-radius: 50px; font-size: 0.8rem; margin-bottom: 15px; display: inline-block; }
+        .product-card { background: white; border: none; transition: 0.4s; padding: 10px; }
+        .product-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
+        .img-box { height: 400px; overflow: hidden; background: #f8f8f8; margin-bottom: 15px; }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.8s; }
+        .product-card:hover img { transform: scale(1.1); }
+        .btn-contact { background: var(--dark); color: white; border-radius: 0; padding: 15px 30px; border: none; transition: 0.3s; width: 100%; text-transform: uppercase; font-weight: 600; }
+        .btn-contact:hover { background: var(--gold); }
+        footer { background: var(--dark); color: white; padding: 40px 0; margin-top: 80px; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar shadow-sm sticky-top">
+        <div class="container text-center">
+            <a class="navbar-brand mx-auto" href="#">L'ÉLÉGANCE AU FÉMININ</a>
+        </div>
+    </nav>
+
+    <header class="hero text-center" data-aos="fade-down">
+        <div class="container">
+            <span class="badge-expo">📍 Retrouvez-moi sur les foires de mode au Canada</span>
+            <h1 class="display-3 fw-bold mt-2">Mode & Accessoires</h1>
+            <p class="lead text-muted mx-auto mb-5" style="max-width: 650px;">
+                Une sélection exclusive de colliers et pièces de mode pour sublimer votre style.
+            </p>
+        </div>
+    </header>
+
+    <div class="container py-5">
+        <div class="row g-4">
+            <!-- Article Mode 1 -->
+            <div class="col-md-6 col-lg-4" data-aos="fade-up">
+                <div class="product-card h-100">
+                    <div class="img-box">
+                        <img src="https://via.placeholder.com/600x800?text=Collier+Mode" alt="Collier">
+                    </div>
+                    <div class="p-3 text-center">
+                        <h3 class="h5">Collier Signature</h3>
+                        <p class="text-muted small">Sélection Spéciale Foire</p>
+                        <a href="#contact" class="btn btn-contact mt-3">S'informer</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Dupliquer ce bloc pour d'autres articles -->
+        </div>
+    </div>
+
+    <section id="contact" class="py-5 bg-white border-top">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center" data-aos="zoom-in">
+                    <h2 class="mb-4">Demande d'Information</h2>
+                    <p class="text-muted mb-5">Un article vous intéresse ? Contactez-nous pour connaître les disponibilités lors de la prochaine foire.</p>
+                    <form action="https://formspree.io/f/mojrwwpn" method="POST">
+                        <input type="text" name="name" class="form-control mb-3" placeholder="Votre Nom" required>
+                        <input type="email" name="_replyto" class="form-control mb-3" placeholder="Votre Email" required>
+                        <textarea name="message" rows="4" class="form-control mb-3" placeholder="Détails de votre demande..." required></textarea>
+                        <button type="submit" class="btn btn-contact">Envoyer à l'équipe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center">
+        <p class="mb-0">© 2026 Boutique Mode Canada | Développé par Steeve Antonio</p>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script> AOS.init({ once: true }); </script>
+</body>
+</html>

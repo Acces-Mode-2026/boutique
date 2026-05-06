@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Boutique de Mode | Haute Élégance Canada</title>
-    <!-- Exemple de CSP simplifiée pour autoriser tes CDN (Bootstrap, Google Fonts, AOS) -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' https://images.unsplash.com data:; connect-src https://formspree.io;">
     
-    <!-- Bibliothèques professionnelles -->
+    <!-- SÉCURITÉ : Politique de Sécurité du Contenu (CSP) pour améliorer le score Mozilla Observatory -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' https://images.unsplash.com data:; connect-src https://formspree.io;">
+
+    <!-- BIBLIOTHÈQUES PROFESSIONNELLES -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;0,600;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -26,6 +27,7 @@
             background-color: var(--soft-cream);
             color: var(--dark-luxury);
             line-height: 1.7;
+            overflow-x: hidden;
         }
 
         h1, h2, h3, .navbar-brand {
@@ -33,9 +35,9 @@
             letter-spacing: 1px;
         }
 
-        /* --- NAVBAR ULTRA-CHIC --- */
+        /* --- NAVBAR GLASSMORPHISM --- */
         .navbar {
-            background: rgba(252, 250, 247, 0.95);
+            background: rgba(252, 250, 247, 0.90);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(197, 160, 89, 0.2);
             transition: all 0.4s ease;
@@ -48,7 +50,7 @@
             color: var(--dark-luxury) !important;
         }
 
-        /* --- HERO SECTION REVISITÉE --- */
+        /* --- HERO SECTION --- */
         .hero {
             height: 90vh;
             background: linear-gradient(var(--overlay), var(--overlay)), 
@@ -72,11 +74,27 @@
             font-style: italic;
         }
 
-        /* --- CARTES PRODUITS MAGNIFIÉES --- */
+        /* --- FILTRES --- */
+        .filter-btn {
+            border-radius: 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            padding: 10px 25px;
+            transition: 0.3s;
+        }
+
+        .filter-btn.active {
+            background-color: var(--dark-luxury) !important;
+            color: white !important;
+        }
+
+        /* --- CARTES PRODUITS --- */
         .product-card {
             border: none;
             background: transparent;
             transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+            margin-bottom: 30px;
         }
 
         .img-container {
@@ -89,18 +107,17 @@
         .img-container img {
             transition: transform 1.2s ease;
             width: 100%;
-            height: 500px;
+            height: 450px;
             object-fit: cover;
         }
 
         .product-card:hover img {
-            transform: scale(1.1);
+            transform: scale(1.08);
         }
 
-        /* Overlay d'achat au survol */
         .view-details {
             position: absolute;
-            bottom: -50px;
+            bottom: -60px;
             left: 0;
             right: 0;
             background: rgba(26, 23, 20, 0.9);
@@ -111,6 +128,7 @@
             text-transform: uppercase;
             font-size: 0.8rem;
             letter-spacing: 2px;
+            cursor: pointer;
         }
 
         .product-card:hover .view-details {
@@ -120,10 +138,10 @@
         .price-tag {
             color: var(--gold-signature);
             font-weight: 500;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
-        /* --- BOUTON DE CONTACT --- */
+        /* --- BOUTONS & FORMULAIRE --- */
         .btn-gold {
             background: var(--gold-signature);
             color: white;
@@ -139,119 +157,178 @@
         .btn-gold:hover {
             background: var(--dark-luxury);
             color: var(--gold-hover);
-            letter-spacing: 5px;
         }
 
-        footer span {
-            color: var(--gold-signature);
-            font-weight: 600;
+        #cart-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--dark-luxury);
+            color: white;
+            padding: 15px 25px;
+            display: none;
+            z-index: 1050;
+            border-left: 5px solid var(--gold-signature);
+            animation: slideIn 0.5s forwards;
         }
+
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
     </style>
 </head>
 <body>
 
+    <!-- NAVBAR AVEC PANIER -->
     <nav class="navbar navbar-expand-lg sticky-top">
-        <div class="container justify-content-center">
-            <a class="navbar-brand" href="#">ACCÈS MODE</a>
+        <div class="container">
+            <a class="navbar-brand mx-auto" href="#">ACCÈS MODE</a>
+            <div class="d-flex align-items-center">
+                <div class="position-relative" style="cursor: pointer;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-bag" viewBox="0 0 16 16">
+                        <path d="M8 1a2 2 0 0 0-2 2v2H5V3a3 3 0 1 1 6 0v2h-1V3a2 2 0 0 0-2-2zM5 5H3.36a1.5 1.5 0 0 0-1.483 1.277L.85 13.13A2.5 2.5 0 0 0 3.322 16h9.355a2.5 2.5 0 0 0 2.473-2.87l-1.028-6.853A1.5 1.5 0 0 0 12.64 5H11v1.5a.5.5 0 0 1-1 0V5H6v1.5a.5.5 0 0 1-1 0V5z"/>
+                    </svg>
+                    <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">0</span>
+                </div>
+            </div>
         </div>
     </nav>
 
+    <!-- HERO SECTION -->
     <header class="hero">
         <div class="container text-center">
             <div data-aos="fade-up">
-                <span style="letter-spacing: 4px; text-transform: uppercase; font-size: 0.8rem;">Exposition Canada 2026</span>
+                <span style="letter-spacing: 5px; text-transform: uppercase; font-size: 0.7rem;">Exposition Canada 2026</span>
                 <h1 class="my-4">L'Art de la <em>Féminité</em></h1>
-                <p class="lead mb-5 opacity-75">Découvrez une collection unique de bijoux artisanaux et d'accessoires raffinés.</p>
-                <a href="#collection" class="btn btn-gold">Explorer la Collection</a>
+                <p class="lead mb-5 opacity-75">L'élégance intemporelle portée par des créations uniques.</p>
+                <a href="#collection" class="btn btn-gold">Voir la Collection</a>
             </div>
         </div>
     </header>
 
+    <!-- SECTION COLLECTION AVEC FILTRES -->
     <main id="collection" class="container py-5 mt-5">
         <div class="text-center mb-5" data-aos="fade-up">
-            <h2 class="display-4">Les Incontournables</h2>
-            <div style="width: 50px; height: 2px; background: var(--gold-signature); margin: 20px auto;"></div>
+            <h2 class="display-5">Nos Créations</h2>
+            <div style="width: 40px; height: 1px; background: var(--gold-signature); margin: 20px auto;"></div>
+            
+            <div class="mt-4">
+                <button class="btn btn-outline-dark filter-btn active" onclick="filterGallery('all')">Tout</button>
+                <button class="btn btn-outline-dark filter-btn" onclick="filterGallery('bijou')">Bijoux</button>
+                <button class="btn btn-outline-dark filter-btn" onclick="filterGallery('accessoire')">Accessoires</button>
+            </div>
         </div>
 
-        <div class="row g-5">
+        <div class="row" id="product-grid">
             <!-- Article 1 -->
-            <div class="col-md-6 col-lg-4" data-aos="fade-up">
+            <div class="col-md-6 col-lg-4 product-item bijou" data-aos="fade-up">
                 <div class="product-card">
                     <div class="img-container">
-                        <img src="https://images.unsplash.com/photo-1535633302704-b02f20471012?q=80&w=1000&auto=format&fit=crop" alt="Collier Perle Royale">
-                        <div class="view-details">Voir les détails</div>
+                        <img src="https://images.unsplash.com/photo-1535633302704-b02f20471012?q=80&w=1200&auto=format&fit=crop" loading="lazy">
+                        <div class="view-details" onclick="addToCart('Collier Perle Royale')">Ajouter au Panier</div>
                     </div>
-                    <div class="mt-4 text-center">
-                        <h3 class="h4">Collier Perle Royale</h3>
-                        <p class="price-tag">Édition Limitée</p>
+                    <div class="mt-3 text-center">
+                        <h3 class="h5">Collier Perle Royale</h3>
+                        <p class="price-tag">145.00 CAD</p>
                     </div>
                 </div>
             </div>
 
             <!-- Article 2 -->
-            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="col-md-6 col-lg-4 product-item bijou" data-aos="fade-up" data-aos-delay="100">
                 <div class="product-card">
                     <div class="img-container">
-                        <img src="https://images.unsplash.com/photo-1611085583191-a3b1a30a5a4a?q=80&w=1000&auto=format&fit=crop" alt="Bracelet Éclat d'Or">
-                        <div class="view-details">Voir les détails</div>
+                        <img src="https://images.unsplash.com/photo-1611085583191-a3b1a30a5a4a?q=80&w=1200&auto=format&fit=crop" loading="lazy">
+                        <div class="view-details" onclick="addToCart('Bracelet Éclat d\'Or')">Ajouter au Panier</div>
                     </div>
-                    <div class="mt-4 text-center">
-                        <h3 class="h4">Bracelet Éclat d'Or</h3>
-                        <p class="price-tag">Artisanat Pur</p>
+                    <div class="mt-3 text-center">
+                        <h3 class="h5">Bracelet Éclat d'Or</h3>
+                        <p class="price-tag">85.00 CAD</p>
                     </div>
                 </div>
             </div>
 
             <!-- Article 3 -->
-            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="400">
+            <div class="col-md-6 col-lg-4 product-item accessoire" data-aos="fade-up" data-aos-delay="200">
                 <div class="product-card">
                     <div class="img-container">
-                        <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1000&auto=format&fit=crop" alt="Boucles d'Oreilles Cristal">
-                        <div class="view-details">Voir les détails</div>
+                        <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1200&auto=format&fit=crop" loading="lazy">
+                        <div class="view-details" onclick="addToCart('Boucles Cristal')">Ajouter au Panier</div>
                     </div>
-                    <div class="mt-4 text-center">
-                        <h3 class="h4">Boucles Cristal</h3>
-                        <p class="price-tag">Nouveauté</p>
+                    <div class="mt-3 text-center">
+                        <h3 class="h5">Boucles Cristal</h3>
+                        <p class="price-tag">60.00 CAD</p>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
+    <!-- FORMULAIRE DE CONTACT GMAIL -->
     <section id="contact" class="py-5 bg-white border-top">
         <div class="container py-5 text-center">
-            <h2 class="mb-4">Une question sur un modèle ?</h2>
-            <p class="text-muted mb-5">Nous vous répondons avec plaisir pour toute demande de prix ou disponibilité.</p>
+            <h2 class="mb-4">Demande de Renseignement</h2>
             <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <!-- Ton lien Formspree reste identique -->
+                <div class="col-md-5">
                     <form action="https://formspree.io/f/mojrwwpn" method="POST">
+                        <input type="hidden" name="_subject" value="Nouveau message - Boutique Canada">
                         <div class="mb-4 text-start">
-                            <label class="form-label small text-uppercase">Votre Nom</label>
-                            <input type="text" name="name" class="form-control rounded-0 border-dark-subtle" required>
+                            <label class="form-label small text-uppercase">Nom Complet</label>
+                            <input type="text" name="name" class="form-control border-dark-subtle rounded-0" required>
                         </div>
                         <div class="mb-4 text-start">
-                            <label class="form-label small text-uppercase">Votre Email</label>
-                            <input type="email" name="_replyto" class="form-control rounded-0 border-dark-subtle" required>
+                            <label class="form-label small text-uppercase">Email</label>
+                            <input type="email" name="_replyto" class="form-control border-dark-subtle rounded-0" required>
                         </div>
                         <div class="mb-4 text-start">
-                            <label class="form-label small text-uppercase">Message</label>
-                            <textarea name="message" rows="4" class="form-control rounded-0 border-dark-subtle" required></textarea>
+                            <label class="form-label small text-uppercase">Votre Message</label>
+                            <textarea name="message" rows="4" class="form-control border-dark-subtle rounded-0" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-gold w-100">Envoyer le message</button>
+                        <button type="submit" class="btn btn-gold w-100">Envoyer vers Gmail</button>
                     </form>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="py-5 text-center bg-dark text-white-50">
-        <div class="container">
-            <p class="small mb-0">© 2026 ACCÈS MODE CANADA | Créé avec passion par <span>Steeve Antonio</span></p>
-        </div>
+    <!-- FOOTER -->
+    <footer class="py-5 bg-dark text-white-50 text-center">
+        <p class="small mb-0">© 2026 ACCÈS MODE CANADA | Développé par <span class="text-white">Steeve Antonio</span></p>
     </footer>
 
+    <!-- NOTIFICATION PANIER -->
+    <div id="cart-toast">Article ajouté avec succès !</div>
+
+    <!-- SCRIPTS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script> AOS.init({ duration: 1000, once: true }); </script>
+    <script>
+        AOS.init({ duration: 1000, once: true });
+
+        // LOGIQUE DU PANIER
+        let cartTotal = 0;
+        function addToCart(itemName) {
+            cartTotal++;
+            document.getElementById('cart-count').innerText = cartTotal;
+            
+            const toast = document.getElementById('cart-toast');
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 2500);
+        }
+
+        // LOGIQUE DE FILTRAGE
+        function filterGallery(category) {
+            const items = document.querySelectorAll('.product-item');
+            const btns = document.querySelectorAll('.filter-btn');
+            
+            btns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            items.forEach(item => {
+                if (category === 'all' || item.classList.contains(category)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
 </body>
 </html>
